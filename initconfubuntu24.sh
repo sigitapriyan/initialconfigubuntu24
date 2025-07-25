@@ -1,34 +1,33 @@
 #!/bin/bash
 
-# --------------------------------------
-# Initial Config Ubuntu 24.04 (LXC)
-# --------------------------------------
-
 echo "🔄 Update & Upgrade Package Repository"
 apt update && apt upgrade -y
 
-echo "⏰ Set timezone to Asia/Jakarta"
+echo "⬇️ Install curl, htop, traceroute, chrony"
+apt install -y curl htop traceroute chrony
+
+echo "⏰ Set timezone ke Asia/Jakarta"
 timedatectl set-timezone Asia/Jakarta
 
-echo "🛰️ Set NTP server ke 10.10.100.10 dan fallback ke Google NTP"
-cat > /etc/systemd/timesyncd.conf <<EOF
-[Time]
-NTP=10.10.100.10
-FallbackNTP=time.google.com
+echo "🛰️ Konfigurasi chrony sebagai NTP client"
+cat > /etc/chrony/chrony.conf <<EOF
+server 10.10.100.10 iburst
+server time.google.com iburst
+driftfile /var/lib/chrony/chrony.drift
+makestep 1.0 3
+rtcsync
 EOF
 
-systemctl restart systemd-timesyncd
+systemctl restart chrony
+systemctl enable chrony
 
-echo "🛡️ Izinkan root login via SSH"
+echo "🔐 Aktifkan login root via SSH"
 sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 systemctl restart sshd
 
-echo "📢 Membuat login banner dinamis"
-
-# File script banner
+echo "📢 Menambahkan banner login dinamis"
 cat > /etc/profile.d/banner.sh <<'EOF'
 #!/bin/bash
-# Dynamic login banner
 HOSTNAME=$(hostname)
 IPADDR=$(hostname -I | awk '{print $1}')
 echo -e "\n\033[1;34m📡 Selamat Datang di $HOSTNAME\033[0m"
