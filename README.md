@@ -1,18 +1,24 @@
-# 🚀 Ubuntu 24 Initial Config Script (for LXC in Proxmox)
+# 🚀 Initial Config Ubuntu 24.04 (LXC / Container - Proxmox)
 
-Script ini digunakan untuk melakukan konfigurasi awal pada container **Ubuntu 24.04** yang dijalankan di dalam **Proxmox**, cocok untuk server baremetal atau virtual yang membutuhkan setup cepat dan praktis.
+Script ini digunakan untuk melakukan konfigurasi awal pada **Ubuntu 24.04**, khususnya pada container (LXC) di dalam **Proxmox**, agar siap digunakan sebagai server production atau development.
+
+---
 
 ## 🔧 Fitur Konfigurasi
 
-- ✅ Update & upgrade repository
-- 🌏 Set timezone ke `Asia/Jakarta`
-- ⏱️ Set NTP server utama ke `10.10.100.10`, fallback ke `time.google.com`
-- 🔐 Izinkan login SSH sebagai `root`
-- 📢 Menampilkan banner login berisi hostname dan IP address saat login shell
+Script ini akan secara otomatis melakukan:
+
+- ✅ Update & upgrade repository (`apt update && apt upgrade`)
+- 🌏 Mengatur timezone ke **Asia/Jakarta**
+- ⏱️ Menentukan NTP server ke `10.10.100.10` dan fallback ke `time.google.com`
+- 🔐 Mengaktifkan login `root` via SSH (`PermitRootLogin yes`)
+- 📢 Menampilkan **banner login dinamis** berisi hostname dan IP address setiap kali user login ke shell
+
+---
 
 ## 📥 Cara Menggunakan
 
-1. Clone repository ini:
+1. Jalankan perintah berikut di container Ubuntu 24.04 milikmu:
+
    ```bash
-   git clone https://github.com/<username>/ubuntu-init-config.git
-   cd ubuntu-init-config
+   curl -sSL https://raw.githubusercontent.com/sigitapriyan/initialconfigubuntu24/main/initconfubuntu24.sh | bash
